@@ -1,0 +1,13 @@
+{
+    "include": ["src/*"],
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
+        "moduleResolution": "node",
+        "allowJs": true,
+        "target": "es2015",
+        "types": [
+            "./src/types.d.ts"
+        ]
+    }
+}
