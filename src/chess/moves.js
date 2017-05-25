@@ -52,6 +52,17 @@ function straights([rowIndex, colIndex]) {
     return [...up, ...right, ...down, ...left];
 }
 
+function isOnPath(pathSqs, pieceSq) {
+
+}
+
+// only for non-knights
+function truncateMoves(originSq, targetSq, pathSqs) {
+
+}
+
+
+
 
 function newAr(len) {
     return new Array(len).fill(null);
