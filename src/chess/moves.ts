@@ -1,15 +1,11 @@
+import find from 'lodash/find';
 // white always at bottom
-
 
 const sideLength = 8;
 
-// export function getMoves(pieceType, colour, [rowIndex, colIndex]) {
-
-// }
-
-
-
-
+const Dirs = Directions;
+const diagonals = [Dirs.UpLeft, Dirs.UpRight, Dirs.DownRight, Dirs.DownLeft];
+const straights = [Dirs.Up, Dirs.Right, Dirs.Down, Dirs.Left];
 
 // function getPawnMoves(colour, [rowIndex, colIndex]) {
 
@@ -18,7 +14,7 @@ const sideLength = 8;
 function getMapFunc(direction: Directions, fromSquare: Square) {
     const [rowIndex, colIndex] = fromSquare;
 
-    return function (_: any, i: number): Square {
+    return function mapFunc(_: any, i: number): Square {
 
         switch (direction) {
             case Directions.UpLeft:
@@ -55,51 +51,40 @@ function getMapFunc(direction: Directions, fromSquare: Square) {
 
 
 
-function moveLine(fromSquare: Square, direction: Directions): Square[] {
+function squaresLine(fromSquare: Square, direction: Directions): Square[] {
     const mapFunc = getMapFunc(direction, fromSquare);
-    return newAr(sideLength).map(mapFunc);
+    return range(sideLength).map(mapFunc);
 }
 
-// export function diagonals(fromSquare: Square): Square[] {
+function lineIntersects(line: Square[], square: Square): [Square, number] {
 
-//     const [rowIndex, colIndex] = fromSquare;
+    let matchingIndex;
+    const match = find(line, (lineSq, i) => {
+        const [row, col] = lineSq;
+        const matches = row === square[0] && col === square[1];
+        if (matches) {
+            matchingIndex = i;
+        }
+        return matches;
+    });
 
-//     const upLeft = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex - i, colIndex - i];
-//     });
-//     const upRight = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex - i, colIndex + i];
-//     });
-//     const downLeft = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex + i, colIndex - i];
-//     });
-//     const downRight = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex + i, colIndex + i];
-//     });
+    return match ? [match, matchingIndex] : null;
+}
 
-//     return [...upLeft, ...upRight, ...downLeft, ...downRight];
+function limitMoves(moveSquares: Square[], length: number) {
+    return moveSquares.slice(0, length);
+}
 
-//     // return list of coordinates: [[1,2], [3,4], ...]
-// }
 
-// function straights(fromSquare: Square): Square[] {
-//     const [rowIndex, colIndex] = fromSquare;
+function nameToSquare(sqName: string): Square {
+    const letter = name[0];
+    const number = name[1];
 
-//     const up = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex - i, colIndex];
-//     });
-//     const right = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex, colIndex + i];
-//     });
-//     const down = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex + i, colIndex];
-//     });
-//     const left = <Square[]>newAr(sideLength).map((_, i) => {
-//         return [rowIndex, colIndex - i];
-//     });
+    const colIndex = 'abcdefgh'.indexOf(letter);
+    const rowIndex = '12345678'.indexOf(number);
 
-//     return [...up, ...right, ...down, ...left];
-// }
+    return [colIndex, rowIndex];
+}
 
 function isOnPath(pathSqs: Square[], pieceSq: Square[]) {
 
@@ -113,8 +98,8 @@ function truncateMoves(originSq, targetSq, pathSqs) {
 
 
 
-function newAr(len) {
-    return new Array(len).fill(null);
+function range(len: number) {
+    return new Array(len).fill(null).map((_, i) => i);
 }
 
 /**
