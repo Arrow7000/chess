@@ -7,6 +7,7 @@
         "start": "webpack-dev-server --inline --hot --open"
     },
     "dependencies": {
+        "@types/lodash": "^4.14.64",
         "babel-core": "^6.24.1",
         "babel-loader": "^7.0.0",
         "babel-plugin-transform-object-rest-spread": "^6.23.0",
