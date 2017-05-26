@@ -1,12 +1,19 @@
 import React from 'react';
+import { mapToFriendly } from '../chess/pieces';
 
 const style = {
-    width: '20px',
-    height: '20px',
+    width: '50px',
+    height: '50px',
     backgroundColor: 'white',
     border: 'solid 1px black',
     display: 'inline-block'
 };
+
+function friendlyStr(chessPiece: ChessPiece): string {
+    const piece = mapToFriendly(chessPiece);
+    const { colour, type } = piece;
+    return `${colour}, ${type}`;
+}
 
 function BoardCell(props) {
     const { contains } = props;
@@ -14,7 +21,7 @@ function BoardCell(props) {
 
     return (
         <div className="BoardCell" style={style}>
-            {contains ? `${contains.colour}, ${contains.type}` : null}
+            {contains ? friendlyStr(contains) : null}
         </div>
     );
 }
