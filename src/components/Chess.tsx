@@ -3,7 +3,10 @@ import { Provider } from 'react-redux';
 import storeCreator from '../store';
 import BoardContainer from './BoardContainer';
 
-import { diagonals } from '../chess/moves';
+import { newBoard } from '../chess/moves';
+
+console.log(newBoard());
+
 
 const store = storeCreator();
 

@@ -3,9 +3,9 @@ import find from 'lodash/find';
 
 const sideLength = 8;
 
-const Dirs = Directions;
-const diagonals = [Dirs.UpLeft, Dirs.UpRight, Dirs.DownRight, Dirs.DownLeft];
-const straights = [Dirs.Up, Dirs.Right, Dirs.Down, Dirs.Left];
+// const Directions = Directions;
+const diagonals = [Directions.UpLeft, Directions.UpRight, Directions.DownRight, Directions.DownLeft];
+const straights = [Directions.Up, Directions.Right, Directions.Down, Directions.Left];
 
 // function getPawnMoves(colour, [rowIndex, colIndex]) {
 
@@ -71,7 +71,7 @@ function lineIntersects(line: Square[], square: Square): [Square, number] {
     return match ? [match, matchingIndex] : null;
 }
 
-function limitMoves(moveSquares: Square[], length: number) {
+function limitLine(moveSquares: Square[], length: number) {
     return moveSquares.slice(0, length);
 }
 
@@ -85,6 +85,77 @@ function nameToSquare(sqName: string): Square {
 
     return [colIndex, rowIndex];
 }
+
+function whatsOnSquare(board: Board, fromSquare: Square, direction: Directions, distance: number): ChessPiece | null {
+    const [colIndex, rowIndex] = fromSquare;
+
+    const line = squaresLine(fromSquare, direction);
+    const targetSq = line[distance];
+
+    const [targetColI, targetRowI] = targetSq;
+
+    return board[targetColI][targetRowI];
+}
+
+
+/**
+ * @TODO:
+ *  - Ensure get the order of king/queen right, depending on square colour
+ */
+
+const King = Pieces.King;
+const Queen = Pieces.Queen;
+const Rook = Pieces.Rook;
+const Bishop = Pieces.Bishop;
+const Knight = Pieces.Knight;
+const Pawn = Pieces.Pawn;
+
+export function newBoard(): Board {
+    const mains = [Rook, Knight, Bishop, King, Queen, Bishop, Knight, Rook];
+    const pawns = range(sideLength).map(() => Pawn);
+
+    const blackMain: BoardRow = mains.map(piece => ({
+        type: piece,
+        colour: Colours.Black
+    }));
+    const blackPawns: BoardRow = pawns.map(piece => ({
+        type: piece,
+        colour: Colours.Black
+    }));
+
+    const whiteMain: BoardRow = mains.map(piece => ({
+        type: piece,
+        colour: Colours.White
+    }));
+    const whitePawns: BoardRow = pawns.map(piece => ({
+        type: piece,
+        colour: Colours.White
+    }));
+
+    const middleRows: BoardRow[] = range(sideLength - 4).map(() => {
+        return range(sideLength).map(() => null);
+    });
+
+    const board = [
+        blackMain,
+        blackPawns,
+        ...middleRows,
+        whitePawns,
+        whiteMain
+    ];
+
+    return board;
+}
+
+
+
+
+
+
+
+
+
+
 
 function isOnPath(pathSqs: Square[], pieceSq: Square[]) {
 
